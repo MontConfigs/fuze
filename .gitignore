@@ -1,41 +1,36 @@
-# Compiled Lua sources
-luac.out
+local players = game:GetService("Players");
+                local lplr = players.LocalPlayer;
+                local lplrGui = lplr.PlayerGui;
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+                local rs = game:GetService("RunService");
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+                function ChangeHotbar()
+                    for index, frame in pairs(lplrGui:FindFirstChild('hotbar')['1']['4']:GetChildren()) do
+                        if frame:IsA("Frame") then
+                            local object = frame:FindFirstChild("1")
+                            if object and object:IsA('ImageButton') then
 
-# Precompiled Headers
-*.gch
-*.pch
+                                if object.BorderColor3 ~= Color3.fromHSV(tick()%5/5,1,1) then
+                                    object.BorderColor3 = Color3.fromHSV(tick()%5/5,1,1);
+                                end
+                                if object.BackgroundColor3 ~= Color3.fromRGB(43, 99, 255) then
+                                    object.BackgroundColor3 = Color3.fromRGB(43, 99, 255);
+                                end
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+                                local Text = object:FindFirstChild("1");
+                                if Text.BackgroundColor3 ~= Color3.fromHSV(tick()%5/5,1,1) then
+                                    Text.BackgroundColor3 = Color3.fromHSV(tick()%5/5,1,1);
+                                end
+                            end
+                        end
+                    end
+                end
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+                local HotbarConnection = nil
 
+                HotbarConnection = rs.PreRender:Connect(ChangeHotbar)
+
+                lplr.CharacterAdded:Connect(function()
+                    HotbarConnection = rs.PreRender:Connect(ChangeHotbar)
+                end)
